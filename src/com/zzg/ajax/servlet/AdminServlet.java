@@ -42,13 +42,13 @@ public class AdminServlet extends HttpServlet {
         String password = req.getParameter("password");
         Map<String, Object> admin = adminDao.login(username, password);
         if (admin == null) {
-            AJAXResult result = new AJAXResult(500001, "对不起账号或密码有误", null);
+            AJAXResult result = new AJAXResult(50001, "对不起账号或密码有误", null);
             String s = JSON.toJSONString(result);
             out.write(s);
         } else {
             req.getSession().setAttribute("admin", admin);
 
-            AJAXResult result = new AJAXResult(200001, "成功登录", null);
+            AJAXResult result = new AJAXResult(20001, "成功登录", null);
             String s = JSON.toJSONString(result);
             out.write(s);
         }
