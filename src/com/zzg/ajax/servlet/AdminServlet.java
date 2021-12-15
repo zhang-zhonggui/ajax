@@ -1,11 +1,16 @@
 package com.zzg.ajax.servlet;
 
+import com.zzg.ajax.dao.AdminDAO;
+import com.zzg.ajax.dao.impl.AdminDAOImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * @Author: zzg
@@ -14,6 +19,8 @@ import java.io.IOException;
  */
 @WebServlet("/admin/*")
 public class AdminServlet extends HttpServlet {
+    private AdminDAO adminDao = new AdminDAOImpl();
+
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
@@ -24,11 +31,18 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-
     protected void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userName = req.getParameter("username");
-        String passWord = req.getParameter("password");
-        System.out.println(userName+"===="+passWord);
 
+        PrintWriter out = resp.getWriter();
+
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        Map<String, Object> admin = adminDao.login(username, password);
+        if (admin == null) {
+            out.write("0");
+        } else {
+            req.getSession().setAttribute("admin", admin);
+            out.write("1");
+        }
     }
 }
