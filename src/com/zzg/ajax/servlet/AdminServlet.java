@@ -1,7 +1,9 @@
 package com.zzg.ajax.servlet;
 
+import com.alibaba.fastjson.JSON;
 import com.zzg.ajax.dao.AdminDAO;
 import com.zzg.ajax.dao.impl.AdminDAOImpl;
+import com.zzg.ajax.result.AJAXResult;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +25,7 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/json;charset=utf-8");
         String uri = req.getRequestURI();
         String[] split = uri.split("/");
         String s = split[split.length - 1];
@@ -39,10 +42,15 @@ public class AdminServlet extends HttpServlet {
         String password = req.getParameter("password");
         Map<String, Object> admin = adminDao.login(username, password);
         if (admin == null) {
-            out.write("0");
+            AJAXResult result = new AJAXResult(500001, "对不起账号或密码有误", null);
+            String s = JSON.toJSONString(result);
+            out.write(s);
         } else {
             req.getSession().setAttribute("admin", admin);
-            out.write("1");
+
+            AJAXResult result = new AJAXResult(200001, "成功登录", null);
+            String s = JSON.toJSONString(result);
+            out.write(s);
         }
     }
 }

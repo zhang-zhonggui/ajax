@@ -19,7 +19,7 @@
 <fieldset>
     <legend>登录</legend>
         <div class="form-group">
-            <span class="label label-danger" id="msg"></span>
+            <span class="label label-danger" id="headMsg"></span>
             <label class="col-sm-2 control-label">账号</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" placeholder="请输入账号" id="userName">
@@ -42,10 +42,10 @@
         var obj={};
         obj.username=userName.value;
         obj.password=passWord.value;
-        $.post("/ajax/admin/login",obj,function (backdata) {
-            if (backdata=="0"){
-                msg.innerHTML="登录失败"
-            }else if (backdata=="1"){
+        $.post("/ajax/admin/login",obj,function (backData) {
+            if (backData.code==500001){
+                headMsg.innerHTML=backData.msg;
+            }else if (backData.code==200001){
                 window.location.href="/ajax/main.html"
             }
         })
